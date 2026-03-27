@@ -4,26 +4,41 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
 const morgan = require('morgan');
 
-const app = express();
-const PORT = 3000;
+const createServiceProxy = (servicePrefix, target) =>
+    createProxyMiddleware({
+        target,
+        changeOrigin: true,
+        pathRewrite: (path) => `${servicePrefix}${path === '/' ? '' : path}`
+    });
 
-// Middleware
-app.use(cors());
-app.use(morgan('dev')); // Logs HTTP requests 
+const createApp = () => {
+    const app = express();
 
-// Proxy Routes
-// Route traffic intended for Auth Service to Port 3001 
-app.use('/api/auth', createProxyMiddleware({ 
-    target: 'http://localhost:3001', 
-    changeOrigin: true 
-}));
+    // Middleware
+    app.use(cors());
+    app.use(morgan('dev'));
 
-// (You will add the other 5 routes here later as your team builds them)
+    // Proxy Routes
+    app.use('/api/auth', createServiceProxy('/api/auth', 'http://localhost:3001'));
 
-app.get('/', (req, res) => {
-    res.send('SL-PRRS API Gateway is running on Port 3000');
-});
+    app.use('/api/stations', createServiceProxy('/api/stations', 'http://localhost:3004'));
 
-app.listen(PORT, () => {
-    console.log(`[Gateway] API Gateway listening at http://localhost:${PORT}`);
-});
+    // (You will add the other 4 routes here later as your team builds them)
+
+    app.get('/', (req, res) => {
+        res.send('SL-PRRS API Gateway is running on Port 3000');
+    });
+
+    return app;
+};
+
+if (require.main === module) {
+    const PORT = Number(process.env.PORT) || 3000;
+    const app = createApp();
+
+    app.listen(PORT, () => {
+        console.log(`[Gateway] API Gateway listening at http://localhost:${PORT}`);
+    });
+}
+
+module.exports = createApp;
