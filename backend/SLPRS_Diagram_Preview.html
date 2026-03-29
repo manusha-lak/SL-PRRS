@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SL-PRRS Diagram Preview</title>
+  <style>
+    :root {
+      --bg: #f3f0e7;
+      --panel: #fffdf7;
+      --ink: #1f2937;
+      --muted: #5b6470;
+      --line: #d8d1c2;
+      --accent: #0f766e;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(180deg, #efe7d5 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+    }
+    p {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(31, 41, 55, 0.06);
+    }
+    .mermaid {
+      overflow-x: auto;
+      text-align: center;
+    }
+    code {
+      background: #f1ede3;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SL-PRRS Diagram Preview</h1>
+    <p>
+      This preview renders the main architecture and sequence diagrams visually.
+      If the page does not render diagrams, the browser likely has no internet access to load Mermaid from the CDN.
+    </p>
+
+    <section class="card">
+      <h2>High-Level Architecture</h2>
+      <div class="mermaid">
+flowchart TD
+    Client["Client / Postman / Frontend"]
+    Gateway["API Gateway :3000"]
+
+    Auth["Auth Service :3001"]
+    Report["Report Service :3002"]
+    Evidence["Evidence Service :3003"]
+    Station["Station Service :3004"]
+    Alert["Alert Service :3005"]
+    Case["Case Service :3006"]
+
+    AuthDB[("Auth DB")]
+    ReportDB[("Report DB")]
+    EvidenceDB[("Evidence DB")]
+    StationDB[("Station DB")]
+    AlertDB[("Alert DB")]
+    CaseDB[("Case DB")]
+
+    Client --> Gateway
+
+    Gateway --> Auth
+    Gateway --> Report
+    Gateway --> Evidence
+    Gateway --> Station
+    Gateway --> Alert
+    Gateway --> Case
+
+    Auth --> AuthDB
+    Report --> ReportDB
+    Evidence --> EvidenceDB
+    Station --> StationDB
+    Alert --> AlertDB
+    Case --> CaseDB
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Service Interaction</h2>
+      <div class="mermaid">
+flowchart LR
+    Citizen["Citizen"]
+    Officer["Police Officer"]
+
+    Auth["Auth Service"]
+    Station["Station Service"]
+    Evidence["Evidence Service"]
+    Report["Report Service"]
+    Alert["Alert Service"]
+    Case["Case Service"]
+
+    Citizen --> Auth
+    Citizen --> Station
+    Citizen --> Evidence
+    Citizen --> Report
+
+    Report --> Alert
+    Report --> Case
+
+    Officer --> Auth
+    Officer --> Alert
+    Officer --> Report
+    Officer --> Case
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Core Request Flow</h2>
+      <div class="mermaid">
+sequenceDiagram
+    participant C as Citizen
+    participant G as API Gateway
+    participant A as Auth Service
+    participant S as Station Service
+    participant E as Evidence Service
+    participant R as Report Service
+    participant L as Alert Service
+    participant K as Case Service
+
+    C->>G: Login request
+    G->>A: Forward /api/auth/login
+    A-->>G: JWT token
+    G-->>C: JWT token
+
+    C->>G: Get nearby stations
+    G->>S: Forward /api/stations/nearby
+    S-->>G: Station list
+    G-->>C: Station list
+
+    C->>G: Upload evidence
+    G->>E: Forward /api/evidence/upload
+    E-->>G: Evidence metadata and URL
+    G-->>C: Evidence result
+
+    C->>G: Submit report
+    G->>R: Forward /api/reports
+    R->>L: Create station alert
+    R->>K: Create initial case record
+    R-->>G: Report created with reference code
+    G-->>C: Report created with reference code
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Source Files</h2>
+      <p>
+        Mermaid source is also available in <code>diagrams\*.mmd</code> and in
+        <code>SLPRS_Diagrams.md</code>.
+      </p>
+    </section>
+  </main>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+</body>
+</html>
