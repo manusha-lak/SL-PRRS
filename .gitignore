@@ -118,3 +118,8 @@ Thumbs.db
 
 #my pw
 mmm.txt
+
+# SQLite / local service DB artifacts (each microservice generates its own DB file)
+**/*.sqlite
+**/*.sqlite3
+**/db/data/
