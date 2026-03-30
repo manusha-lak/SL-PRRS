@@ -18,7 +18,13 @@ app.use('/api/auth', createProxyMiddleware({
     changeOrigin: true 
 }));
 
-// (You will add the other 5 routes here later as your team builds them)
+// Route traffic intended for Report Service to Port 3002 
+app.use('/api/reports', createProxyMiddleware({ 
+    target: 'http://localhost:3002', 
+    changeOrigin: true 
+}));
+
+// (You will add the other 4 routes here later as your team builds them)
 
 app.get('/', (req, res) => {
     res.send('SL-PRRS API Gateway is running on Port 3000');
