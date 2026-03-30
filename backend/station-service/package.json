@@ -1,0 +1,19 @@
+{
+  "name": "station-service",
+  "version": "1.0.0",
+  "description": "Station directory and nearby lookup service for SL-PRRS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "geolib": "^3.3.4",
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
