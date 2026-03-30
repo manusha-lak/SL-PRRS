@@ -20,6 +20,13 @@ const createApp = () => {
 
     // Proxy Routes
     app.use('/api/auth', createServiceProxy('/api/auth', 'http://localhost:3001'));
+// Route traffic intended for Report Service to Port 3002 
+app.use('/api/reports', createProxyMiddleware({ 
+    target: 'http://localhost:3002', 
+    changeOrigin: true 
+}));
+
+// (You will add the other 4 routes here later as your team builds them)
 
     app.use('/api/stations', createServiceProxy('/api/stations', 'http://localhost:3004'));
 

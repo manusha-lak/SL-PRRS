@@ -5,10 +5,10 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-    console.error("Missing Supabase credentials in .env file");
-    process.exit(1); // Fails fast to prevent runtime errors later
+    console.error("CRITICAL: Missing Supabase credentials in .env file");
+    process.exit(1); 
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-module.exports = supabase;
+module.exports = supabase;
